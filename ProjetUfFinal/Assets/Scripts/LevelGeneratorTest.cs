@@ -5,11 +5,14 @@ using CodeMonkey.Utils;
 
 public class LevelGeneratorTest : MonoBehaviour
 {
+    private Pathfinding pathfinding;
+
     public Texture2D map;
 
     public ColorToPrefab[] colorMappings;
-    
-    private Grid grid;
+
+    public int t;
+    public int t2;
 
     private void Start()
     {
@@ -18,7 +21,7 @@ public class LevelGeneratorTest : MonoBehaviour
 
     void GenerateLevel () 
     {
-        grid = new Grid(map.width, map.height, 1f, new Vector3(0,0));
+        pathfinding = new Pathfinding(map.width, map.height); 
         for (int x = 0; x < map.width; x++)
         {
             for (int y = 0; y < map.height; y++)
@@ -44,10 +47,16 @@ public class LevelGeneratorTest : MonoBehaviour
             if (colorMapping.color.Equals(pixelColor))
             {
                 Vector2 position = new Vector2(x,y);
+
+                pathfinding.GetGrid().GetXY(position, out int t, out int t2);
+
                 Instantiate(colorMapping.prefab, position, Quaternion.identity, transform);
-                if (colorMapping.prefab.name == "56")
+                if (colorMapping.prefab.name == "Mur")
                 {
-                    grid.SetValue(position, 56);
+                    Debug.Log("1");
+                    pathfinding.GetNode(t, t2).SetValue2();
+                    pathfinding.GetNode(t, t2).SetIsWalkable(!pathfinding.GetNode(t, t2).isWalkable);
+                    pathfinding.GetNode(t, t2).SetIsWalkable(!pathfinding.GetNode(t, t2).isWalkable);
                 }
             }
         }
